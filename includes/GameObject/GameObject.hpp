@@ -6,10 +6,9 @@
 #include <SDL3_image/SDL_image.h>
 #include <map>
 
+#include "./state.hpp"
 #include "../Init.hpp"
 #include "Animation.hpp"
-
-enum class EntityState;
 
 struct EntityData;
 
@@ -90,7 +89,7 @@ public:
         return this->type;
     }
 
-    virtual void movement(SDLState &state, float deltaTime, std::vector<GameObject *> layers)
+    virtual void update(SDLState &state, float deltaTime, std::vector<GameObject *> layers)
     {
         std::cout << "wrong movement" << std::endl;
     }

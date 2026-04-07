@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameObject/LevelObj.hpp"
-#include "GameObject/Entity.hpp"
+#include "GameObject/Player.hpp"
 
 class WorldGen
 {
@@ -47,10 +47,10 @@ public:
 
         const auto createPlayer = [this, &state](int r, int c)
         {
-            Entity* obj = new Entity(ObjectType::player);
             glm::vec2 pos(
                 c * TILE_SIZE,
                 state.logH - (MAP_ROWS - r) * TILE_SIZE);
+            Player *obj = new Player(pos);
             obj->setPosition(pos);
             obj->setCollider({.x = 11, .y = 6, .w = 10, .h = 26});
             return obj;
@@ -70,7 +70,7 @@ public:
                 }
                 case 4:
                 {
-                    Entity* player = createPlayer(r, c);
+                    Player *player = createPlayer(r, c);
                     player->setCollider({.x = 11, .y = 6, .w = 10, .h = 26});
                     LAYERS.push_back(player);
                     break;

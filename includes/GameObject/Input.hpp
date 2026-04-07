@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include "state.hpp"
 
 struct movementState
 {
-    glm::vec2 velocity;
+    EntityState state;
     float direction;
 };
 
@@ -24,28 +25,32 @@ public:
         return this->keys;
     }
 
-    movementState checkAction(glm::vec2 &velocity, float &acceleration, float &maxSpeed, float dt)
+    movementState checkAction()
     {
+        EntityState st = EntityState::idle;
         float currentDirection = 0;
-        bool moov = false;
         if (keys[SDL_SCANCODE_A])
         {
+            st = EntityState::walking;
             currentDirection += -1;
-            moov = true;
+        }
+        else
+        {
+            st = EntityState::idle;
         }
         if (keys[SDL_SCANCODE_D])
         {
+            st = EntityState::walking;
             currentDirection += 1;
-            moov = true;
         }
-
-        if (moov)
+        if (keys[SDL_SCANCODE_SPACE])
         {
-            velocity += currentDirection * acceleration * dt;
-            if (std::abs(velocity.x) > maxSpeed)
-                velocity.x = currentDirection * maxSpeed;
-            return {{velocity.x , velocity.y}, currentDirection};
+            st = EntityState::jumping;
         }
-        return {glm::vec2(0, 500), currentDirection};
+        if (keys[SDL_SCANCODE_R])
+        {
+            st = EntityState::respawn;
+        }
+        return {st, currentDirection};
     }
 };

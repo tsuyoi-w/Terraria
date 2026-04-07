@@ -1,6 +1,8 @@
 #define SDL_MAIN_HANDLED
 #include "../includes/WorldGen.hpp"
 
+void render(WorldGen &worldGen, SDLState &state, float deltaTime);
+
 int main()
 {
     SDLState state;
@@ -28,23 +30,30 @@ int main()
                 break;
             }
         }
-        for (auto &obj : worldGen.getLayers())
-        {
-            if (obj->getType() == ObjectType::player)
-                obj->movement(state, deltaTime, worldGen.getLayers());
-        }
 
-        SDL_SetRenderDrawColor(state.renderer, 0, 80, 197, 255);
-        SDL_RenderClear(state.renderer);
+        render(worldGen, state, deltaTime);
 
-        for (auto &obj : worldGen.getLayers())
-        {
-            obj->drawObject(state, deltaTime);
-        }
         SDL_RenderPresent(state.renderer);
         prevTime = nowTime;
     }
-
+    
     cleanup(state);
     return 0;
+}
+
+void render(WorldGen &worldGen, SDLState &state, float deltaTime)
+{
+    for (auto &obj : worldGen.getLayers())
+    {
+        if (obj->getType() == ObjectType::player)
+            obj->update(state, deltaTime, worldGen.getLayers());
+    }
+
+    SDL_SetRenderDrawColor(state.renderer, 0, 80, 197, 255);
+    SDL_RenderClear(state.renderer);
+
+    for (auto &obj : worldGen.getLayers())
+    {
+        obj->drawObject(state, deltaTime);
+    }
 }

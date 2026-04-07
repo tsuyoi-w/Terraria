@@ -3,16 +3,6 @@
 #include "GameObject.hpp"
 #include "Input.hpp"
 
-enum class EntityState
-{
-    idle,
-    walking,
-    running,
-    jumping,
-    falling,
-    flying,
-    swiming
-};
 
 struct EntityData
 {
@@ -25,18 +15,14 @@ struct EntityData
 
 class Entity : public GameObject
 {
-private:
+protected:
     EntityData data;
-
-    Input input;
-
     glm::vec2 velocity, acceleration;
     float maxSpeedX;
+    float jumpForce;
 
 public:
-    Entity(ObjectType);
-
-    void movement(SDLState &, float, std::vector<GameObject *>) override;
+    virtual void update(SDLState &, float, std::vector<GameObject *>);
 
     int getDirection();
 
