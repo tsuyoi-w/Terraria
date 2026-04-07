@@ -1,0 +1,6 @@
+build/
+*.exe
+*.log
+*.dll
+.vscode/
+logs/git rm -r *
