@@ -30,7 +30,7 @@ enum class ObjectType
 
 struct GameObject
 {
-protected:
+public:
     ObjectType type;
 
     glm::vec2 position;
@@ -43,7 +43,7 @@ protected:
 
     bool dynamic;
 
-public:
+
     SDL_FRect collider;
     int currentAnimation;
     GameObject() : collider{0}
@@ -100,7 +100,7 @@ public:
         this->collider = value;
     }
 
-    void checkCollision(SDLState &state, GameObject &obj, float deltaTime)
+    virtual void checkCollision(SDLState &state, GameObject &obj, float deltaTime)
     {
         SDL_FRect rectA{
             .x = this->position.x + this->collider.x, .y = this->position.y + this->collider.y, .w = this->collider.w, .h = this->collider.h};

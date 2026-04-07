@@ -44,7 +44,7 @@ public:
             velocity += currentDirection * acceleration * dt;
             if (std::abs(velocity.x) > maxSpeed)
                 velocity.x = currentDirection * maxSpeed;
-            return {{velocity.x , 500}, currentDirection};
+            return {{velocity.x , velocity.y}, currentDirection};
         }
         return {glm::vec2(0, 500), currentDirection};
     }

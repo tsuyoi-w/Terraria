@@ -1,10 +1,5 @@
 #define SDL_MAIN_HANDLED
-
-#include "../includes/Init.hpp"
-#include "../includes/GameObject/Entity.hpp"
-#include "../includes/GameObject/Input.hpp"
 #include "../includes/WorldGen.hpp"
-#include <memory>
 
 int main()
 {
@@ -15,7 +10,6 @@ int main()
         return 1;
 
     uint64_t prevTime = SDL_GetTicks();
-
     while (state.running)
     {
         uint64_t nowTime = SDL_GetTicks();
