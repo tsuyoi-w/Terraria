@@ -36,24 +36,30 @@ int main()
         SDL_RenderPresent(state.renderer);
         prevTime = nowTime;
     }
-    
+
     cleanup(state);
     return 0;
 }
 
 void render(WorldGen &worldGen, SDLState &state, float deltaTime)
 {
-    for (auto &obj : worldGen.getLayers())
+    for (auto &layer : worldGen.LAYERS)
     {
-        if (obj->getType() == ObjectType::player)
-            obj->update(state, deltaTime, worldGen.getLayers());
+        for (auto &obj : layer)
+        {
+            if (obj->type == ObjectType::player)
+                obj->update(state, deltaTime, worldGen.LAYERS[worldGen.TILES_INDEX]);
+        }
     }
 
     SDL_SetRenderDrawColor(state.renderer, 0, 80, 197, 255);
     SDL_RenderClear(state.renderer);
 
-    for (auto &obj : worldGen.getLayers())
+    for (auto &layer : worldGen.LAYERS)
     {
-        obj->drawObject(state, deltaTime);
+        for (auto &obj : layer)
+        {
+            obj->drawObject(state, deltaTime);
+        }
     }
 }

@@ -22,7 +22,7 @@ void Entity::collisionResponse(SDLState &state, const SDL_FRect &rectA, const SD
 {
     if (this->type == ObjectType::player)
     {
-        switch (b.getType())
+        switch (b.type)
         {
         case ObjectType::level:
 

@@ -6,12 +6,17 @@
 class WorldGen
 {
 private:
-    static constexpr unsigned int MAP_ROWS = 5;
+    static constexpr unsigned int MAP_ROWS = 10;
     static constexpr unsigned int MAP_COLS = 50;
     static constexpr unsigned int TILE_SIZE = 32;
-    std::vector<GameObject *> LAYERS;
 
 public:
+    const unsigned int BG_INDEX = 0;
+    const unsigned int TILES_INDEX = 1;
+    const unsigned int ENTITY_INDEX = 2;
+
+    std::array<std::vector<GameObject *>, 3> LAYERS;
+
     WorldGen(SDLState &state)
     {
         createTiles(state);
@@ -19,29 +24,16 @@ public:
 
     void createTiles(const SDLState &state)
     {
-        /*
-        ! 1 - Ground
-        ! 2 - Panel
-        ! 3 - Enemy
-        ! 4 - Player
-        ! 5 - Grass
-        ! 6 - Brick
-        */
-        short map[MAP_ROWS][MAP_COLS] = {
-            4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
+        short map[MAP_ROWS][MAP_COLS];
+        map[1][1] = 4;
         const auto creatLevel = [this, &state](ObjectType type, int r, int c)
         {
             LevelObj *obj = new LevelObj();
             glm::vec2 pos(
                 c * TILE_SIZE,
                 state.logH - (MAP_ROWS - r) * TILE_SIZE);
-            obj->setCollider({.x = 0, .y = -1, .w = 32, .h = 32});
-            obj->setPosition(pos);
+            obj->collider = {.x = 0, .y = -1, .w = 32, .h = 32};
+            obj->position = pos;
             return obj;
         };
 
@@ -51,8 +43,8 @@ public:
                 c * TILE_SIZE,
                 state.logH - (MAP_ROWS - r) * TILE_SIZE);
             Player *obj = new Player(pos);
-            obj->setPosition(pos);
-            obj->setCollider({.x = 11, .y = 6, .w = 10, .h = 26});
+            obj->position = pos;
+            obj->collider = {.x = 11, .y = 6, .w = 10, .h = 26};
             return obj;
         };
 
@@ -60,29 +52,31 @@ public:
         {
             for (int c = 0; c < MAP_COLS; c++)
             {
+                if (r == 3 || r == 4 || r == 5)
+                {
+                    map[r][c] = 1;
+                    LevelObj *obj = creatLevel(ObjectType::level, r, c);
+                    if (map[r - 1][c] == 1 && r > 4)
+                    {
+                        obj->currentText = 2;
+                    }
+                    else if (map[r - 1][c] == 1)
+                    {
+                        obj->currentText = 1;
+                    }
+                    LAYERS[TILES_INDEX].push_back(obj);
+                    continue;
+                }
                 switch (map[r][c])
                 {
-                case 1:
-                {
-                    LevelObj *obj = creatLevel(ObjectType::level, r, c);
-                    LAYERS.push_back(obj);
-                    break;
-                }
                 case 4:
                 {
                     Player *player = createPlayer(r, c);
-                    player->setCollider({.x = 11, .y = 6, .w = 10, .h = 26});
-                    LAYERS.push_back(player);
+                    LAYERS[ENTITY_INDEX].push_back(player);
                     break;
                 }
                 }
             }
         }
-    }
-
-    std::vector<GameObject *> &
-    getLayers()
-    {
-        return this->LAYERS;
     }
 };

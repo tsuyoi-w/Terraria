@@ -61,7 +61,6 @@ public:
         }
         this->position += this->velocity * deltaTime;
 
-        std::cout << direction << "/" << velocity.y << std::endl;
 
         if (this->position.x > state.logW - 30)
             this->position.x = state.logW - (30);
@@ -70,7 +69,7 @@ public:
 
         for (auto &obj : layers)
         {
-            if (obj->getType() != ObjectType::player)
+            if (obj->type != ObjectType::player)
             {
                 checkCollision(state, *obj, deltaTime);
             }

@@ -7,17 +7,11 @@ class Animation
     unsigned int frameCount;
 
 public:
-    Animation() : timer(0), frameCount(0) {}
-    Animation(unsigned int frameCount, float length) : frameCount(frameCount), timer(length) {}
+    Animation();
+    Animation(unsigned int frameCount, float length);
 
-    float getLength() const { return this->timer.getLength(); }
-    int currentFrame() const
-    {
-        return static_cast<int>(this->timer.getTime() / this->timer.getLength() * this->frameCount);
-    }
+    float getLength() const;
+    int currentFrame() const;
 
-    void step(float deltaTime)
-    {
-        this->timer.step(deltaTime);
-    }
+    void step(float);
 };
