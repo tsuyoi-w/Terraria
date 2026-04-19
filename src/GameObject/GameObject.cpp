@@ -1,4 +1,5 @@
 #include "../../includes/GameObject/GameObject.hpp"
+#include <SDL3_ttf/SDL_ttf.h>
 
 GameObject::GameObject() : collider{0} {}
 

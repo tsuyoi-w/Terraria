@@ -1,5 +1,6 @@
 #include "../includes/Init.hpp"
 
+
 bool initialize(SDLState &state)
 {
     bool success = true;
@@ -14,6 +15,19 @@ bool initialize(SDLState &state)
     {
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Error initializing window", nullptr);
         success = false;
+    }
+
+    if (!TTF_Init())
+    {
+        SDL_Log("Couldn't initialize SDL_ttf: %s\n", SDL_GetError());
+        success = false;
+    }
+
+    font = TTF_OpenFontIO(SDL_IOFromConstMem(tiny_ttf, tiny_ttf_len), true, 18.0f);
+    if (!font)
+    {
+        SDL_Log("Couldn't open font: %s\n", SDL_GetError());
+        return SDL_APP_FAILURE;
     }
 
     state.renderer = SDL_CreateRenderer(state.window, nullptr);

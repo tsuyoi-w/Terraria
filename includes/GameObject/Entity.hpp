@@ -3,7 +3,6 @@
 #include "GameObject.hpp"
 #include "Input.hpp"
 
-
 struct EntityData
 {
     EntityState state;
@@ -11,15 +10,24 @@ struct EntityData
     {
         state = EntityState::idle;
     }
+
+    int ID = 0;
+
+    float MaxLife = 100.0f;
+    float life = MaxLife;
+
+    unsigned int Level;
+    float Exp;
 };
 
 class Entity : public GameObject
 {
-protected:
+public:
     EntityData data;
     glm::vec2 velocity, acceleration;
     float maxSpeedX;
     float jumpForce;
+    bool debug = true;
 
 public:
     virtual void update(SDLState &, float, std::vector<GameObject *>);
@@ -32,5 +40,5 @@ public:
 
     void onStateChange(EntityState);
 
-    void checkCollision(SDLState &state, GameObject &obj, float deltaTime);
+    void debugLog(SDLState &state) override;
 };

@@ -51,6 +51,10 @@ public:
         {
             st = EntityState::respawn;
         }
+        if (keys[SDL_SCANCODE_TAB])
+        {
+            st = EntityState::debug;
+        }
         return {st, currentDirection};
     }
 };

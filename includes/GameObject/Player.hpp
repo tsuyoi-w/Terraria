@@ -1,11 +1,16 @@
 #pragma once
 #include "Entity.hpp"
+#include "../Camera.hpp"
 
 class Player : public Entity
 {
 public:
     Input input;
     glm::vec2 spawnPoint;
+    float cooldown = 0;
+    Camera camera;
+
+    Player() {}
 
     Player(glm::vec2 sw)
     {
@@ -21,10 +26,12 @@ public:
         this->textures[0] = "data/texture/Characters/players/idle.png";
         this->textures[1] = "data/texture/Characters/players/walking.png";
         this->spawnPoint = sw;
+        this->collider = {.x = 11, .y = 6, .w = 10, .h = 26};
     }
     void update(SDLState &state, float deltaTime, std::vector<GameObject *> layers) override
     {
-        if (this->dynamic)
+        cooldown += deltaTime;
+        if (this->dynamic && !this->inCollision)
             this->velocity += glm::vec2(0, 500) * deltaTime;
 
         movementState newMov = input.checkAction();
@@ -51,6 +58,16 @@ public:
         case EntityState::respawn:
             this->respawn();
             this->velocity.y -= this->velocity.y;
+            this->data.life -= 5;
+            this->camera.pos = {0, 0};
+            break;
+        case EntityState::debug:
+
+            this->debug = !this->debug;
+            break;
+        case EntityState::jumping:
+            this->velocity.y = 0;
+            this->velocity.y = -200;
             break;
         }
 
@@ -61,11 +78,7 @@ public:
         }
         this->position += this->velocity * deltaTime;
 
-
-        if (this->position.x > state.logW - 30)
-            this->position.x = state.logW - (30);
-        if (this->position.x < 0)
-            this->position.x = 0;
+        this->camera.set((this->velocity.x * deltaTime) * -1);
 
         for (auto &obj : layers)
         {

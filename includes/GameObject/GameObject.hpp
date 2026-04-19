@@ -1,7 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
-#include <SDL3/SDL.h>
 #include <iostream>
 #include <SDL3_image/SDL_image.h>
 #include <map>
@@ -41,6 +40,7 @@ public:
     SDL_Texture *tex;
 
     bool dynamic;
+    bool inCollision = false;
 
     SDL_FRect collider;
     int currentAnimation;
@@ -57,6 +57,8 @@ public:
     virtual void update(SDLState &, float, std::vector<GameObject *>);
 
     virtual void checkCollision(SDLState &, GameObject &, float);
+
+    virtual void debugLog(SDLState &state) {}
 
     virtual void collisionResponse(SDLState &, const SDL_FRect &, const SDL_FRect &, const SDL_FRect &, GameObject &b, float);
 };

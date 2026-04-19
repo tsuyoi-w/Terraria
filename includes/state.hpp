@@ -12,5 +12,6 @@ enum class EntityState
     attack,
     breakk,
     place,
-    respawn
+    respawn,
+    debug
 };
