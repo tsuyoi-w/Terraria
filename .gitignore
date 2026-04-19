@@ -4,4 +4,4 @@ build/
 *.dll
 .vscode/
 logs/git rm -r *
-cmake.sh
+*.sh
